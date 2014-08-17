@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask.ext.bootstrap import Bootstrap
-
+from flask.ext.moment import Moment
+from datetime import datetime
 
 # create application instance
 # web server passes all request to this object using WSGI
@@ -8,12 +9,14 @@ from flask.ext.bootstrap import Bootstrap
 # find resource files relative to location of app
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
+moment = Moment(app)
 
 
 # view functions
-@app.route('/index')
+@app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html',
+                            current_time=datetime.utcnow())
 
 
 @app.route('/user/<name>')
@@ -29,7 +32,7 @@ def page_not_found(e):
 
 @app.errorhandler(500)
 def page_not_found(e):
-    return render_template('500.html'), 500
+    return render_template('500.html', e=e), 500
 
 # used to ensure dev server only started when app is
 # executed directly
