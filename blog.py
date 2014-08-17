@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from flask.ext.script import Manager
+from flask.ext.bootstrap import Bootstrap
 
 
 # create application instance
@@ -7,7 +7,7 @@ from flask.ext.script import Manager
 # __name__ used to determine root path of app so that it can later
 # find resource files relative to location of app
 app = Flask(__name__)
-manager = Manager(app)
+bootstrap = Bootstrap(app)
 
 
 # view functions
@@ -25,4 +25,4 @@ def user(name):
 # executed directly
 # change this for production
 if __name__ == '__main__':
-    manager.run()
+    app.run()
