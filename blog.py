@@ -4,6 +4,7 @@ from flask.ext.script import Manager, Shell
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.moment import Moment
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.migrate import Migrate, MigrateCommand
 
 
 from flask.ext.wtf import Form
@@ -25,10 +26,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] =\
     'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 
+
 db = SQLAlchemy(app)
 manager = Manager(app)
 bootstrap = Bootstrap(app)
 moment = Moment(app)
+migrate = Migrate(app, db)
+
 
 # used by flask-wtf for csrf tokens
 # eventually move to env variable
@@ -39,7 +43,9 @@ app.config['SECRET_KEY'] = 'hard to guess string'
 def make_shell_context():
     return dict(app=app, db=db, User=User, Role=Role)
 
+# add commands to manager
 manager.add_command("shell", Shell(make_context=make_shell_context))
+manager.add_command('db', MigrateCommand)
 
 
 # models
