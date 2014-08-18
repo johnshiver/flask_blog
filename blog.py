@@ -1,9 +1,10 @@
 from flask import Flask, render_template, session, redirect, url_for, flash
 
-from flask.ext.script import Manager
+from flask.ext.script import Manager, Shell
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.moment import Moment
 from flask.ext.sqlalchemy import SQLAlchemy
+
 
 from flask.ext.wtf import Form
 from wtforms import StringField, SubmitField
@@ -32,6 +33,13 @@ moment = Moment(app)
 # used by flask-wtf for csrf tokens
 # eventually move to env variable
 app.config['SECRET_KEY'] = 'hard to guess string'
+
+
+# shell functions
+def make_shell_context():
+    return dict(app=app, db=db, User=User, Role=Role)
+
+manager.add_command("shell", Shell(make_context=make_shell_context))
 
 
 # models
